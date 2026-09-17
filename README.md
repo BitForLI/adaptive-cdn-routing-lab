@@ -28,7 +28,7 @@ The logical Sydney/Singapore topology runs on one three-node kind cluster. Prome
   - `deterministic`: upstream modulo-hash selection with existing active-health and geographic fallback;
   - `static-rendezvous`: equal-weight rendezvous with the same health/fallback behavior and no NodeQuality input;
   - `adaptive`: NodeQuality-weighted rendezvous with ejection and recovery.
-- An allocation-free DNS selection path using `/24` IPv4 and `/56` IPv6/ECS routing keys, `xxhash/v2`, dynamic informers, and `atomic.Pointer` snapshots.
+- `/24` IPv4 and `/56` IPv6/ECS routing keys, `xxhash/v2` weighted selection, dynamic informers, and `atomic.Pointer` snapshots. The isolated weighted-selection benchmark records zero allocations; the surrounding DNS handler still builds candidate collections.
 - Bounded-cardinality CoreDNS/controller metrics for routing, fallback, unavailability, reconcile outcomes, and snapshot age.
 - A reproducible HLS lab with one MediaMTX origin, three independent NGINX caches, Prometheus exporters, Toxiproxy fault injection, and k6 traffic.
 - Strict experiment identity checks that bind every result to one Git commit, image ID, Job UID, Pod, run ID, profile, host, and non-empty Prometheus response.
@@ -100,7 +100,7 @@ The controller uses standard mechanisms rather than reimplementing infrastructur
 - EWMA smooths observed latency/error signals; the repository defines the signals, sample gates, thresholds, and state transitions.
 - Outlier ejection follows the safety shape used by Envoy-style passive health handling: consecutive failures and error rate can eject, while a per-location maximum prevents all local nodes being removed together.
 - Weighted Rendezvous uses the exponential-rank formulation `-ln(u) / weight` and the maintained [`cespare/xxhash`](https://github.com/cespare/xxhash) implementation.
-- Recovery publishes bounded 10%/25%/50%/100% capacity steps so a cold cache is not returned to full traffic immediately.
+- Recovery applies 10%/25%/50%/100% state factors to the quality score so a cold cache is not returned immediately to its normal routing weight. Published weight also depends on latency, error rate, and available headroom; those factors are not fixed percentages of actual traffic.
 - Controller or Prometheus failure keeps DNS independent: request goroutines use last-known-good snapshot data, then bounded stale behavior and geographic fallback.
 
 Exact formulas, candidate filtering order, routing-key privacy, references, and measured benchmarks are in [docs/algorithm.md](docs/algorithm.md). The full component and failure boundaries are in [docs/architecture.md](docs/architecture.md) and [docs/failure-analysis.md](docs/failure-analysis.md).
@@ -121,6 +121,8 @@ make e2e
 ```
 
 The unit suite covers EWMA and score boundaries, stale/hard-stale behavior, ejection safety, cooldown/recovery transitions, Prometheus parsing, weighted distribution, minimal disruption, invalid weights, static fail-open, Ejected exclusion, immutable snapshots, and concurrent reads. The e2e target uses the real local HLS/monitoring/control path; it is not a substitute for a multi-region or production load test.
+
+For resume claims, [docs/resume-bullets.md](docs/resume-bullets.md) maps implementation and measured results to their source files. The benchmark's zero-allocation result applies to `internal/routing/SelectWeightedRendezvous`, not the full CoreDNS request path. The 36-run fault results are local smoke observations; neither a production latency improvement nor a fixed share of live traffic follows from them.
 
 Other useful targets:
 

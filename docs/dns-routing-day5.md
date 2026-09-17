@@ -29,7 +29,7 @@ Coverage includes:
 - static fail-open when NodeQuality is disabled or absent;
 - A/AAAA, active-health, Ejected, Disabled and zero-weight filtering.
 
-The request path uses `cespare/xxhash/v2` rather than a project-local hash implementation. The benchmark recorded 0 B/op and 0 allocs/op for 8, 64 and 512 candidates. Exact host results are recorded in [algorithm.md](algorithm.md).
+The request path uses `cespare/xxhash/v2` rather than a project-local hash implementation. The isolated weighted-selection benchmark recorded 0 B/op and 0 allocs/op for 8, 64 and 512 candidates; it does not measure allocations in the surrounding DNS handler. Exact host results are recorded in [algorithm.md](algorithm.md).
 
 ## Runtime image and deployment
 

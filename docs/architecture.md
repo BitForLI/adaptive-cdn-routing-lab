@@ -84,7 +84,7 @@ Status stores cooldown and recovery progress, so controller restart does not era
 
 DNS answers use a 30-second lab TTL. Already-resolved clients may continue to use an old node until their resolver cache expires; therefore an immediate weight change cannot recall every active HLS session.
 
-Playlist TTL is 1 second and immutable fMP4 segment TTL is 10 minutes. A recovered Pod starts with an empty cache, so returning it directly to full DNS weight can create an origin spike. EdgeRoute publishes 10%, 25%, 50%, then 100% capacity steps at 30/60/120 seconds. This ramp is a routing safety control; it cannot guarantee origin protection when downstream resolvers ignore TTLs or when client sessions pin an address.
+Playlist TTL is 1 second and immutable fMP4 segment TTL is 10 minutes. A recovered Pod starts with an empty cache, so returning it directly to full DNS weight can create an origin spike. EdgeRoute applies 10%, 25%, 50%, then 100% recovery state factors at 30/60/120 seconds; the published weight also depends on latency, error rate and available headroom, so these are not fixed shares of traffic. This ramp is a routing safety control; it cannot guarantee origin protection when downstream resolvers ignore TTLs or when client sessions pin an address.
 
 ## Observability and cardinality
 

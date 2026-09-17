@@ -45,7 +45,7 @@ Risk: safety against total ejection deliberately trades correctness for capacity
 
 ### Cold-cache recovery
 
-After cooldown and healthy samples, a node moves to `Recovering` and receives bounded 10%/25%/50%/100% weight steps. This limits the control-plane rate increase while NGINX repopulates playlist/segment objects.
+After cooldown and healthy samples, a node moves to `Recovering` with bounded 10%/25%/50%/100% state factors. Its published weight also depends on latency, errors and headroom; the staged factors limit the control-plane rate increase while NGINX repopulates playlist/segment objects.
 
 Risk: the smoke data did not demonstrate lower cold-cache latency or origin bandwidth. Adaptive cold-cache P95 was materially worse than baseline in this sample, so no “improved cache efficiency” claim is made.
 

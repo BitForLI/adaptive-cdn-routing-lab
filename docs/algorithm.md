@@ -52,13 +52,13 @@ Automated tests cover deterministic and order-independent selection, 70/20/10 di
 
 Windows/amd64 benchmark on the lab host (Intel i5-12400F, Go 1.25.0):
 
-| Candidate count | Serial | Parallel | Request-path allocations |
+| Candidate count | Serial | Parallel | Selection-function allocations |
 |---:|---:|---:|---:|
 | 8 | 532.6 ns/op | 60.64 ns/op | 0 B/op, 0 allocs/op |
 | 64 | 4.368 µs/op | 525.1 ns/op | 0 B/op, 0 allocs/op |
 | 512 | 35.51 µs/op | 4.389 µs/op | 0 B/op, 0 allocs/op |
 
-Snapshot replacement for 512 entries measured 43.28 µs/op and 114,728 B/op. That allocation occurs only on informer updates, not DNS queries. These local numbers are reproducible evidence for this machine, not a claim about global production throughput.
+Snapshot replacement for 512 entries measured 43.28 µs/op and 114,728 B/op. That snapshot allocation occurs on informer updates, not DNS queries. The benchmark does not measure allocations in the surrounding CoreDNS handler, which builds candidate collections. These local numbers are reproducible evidence for this machine, not a claim about global production throughput.
 
 ## References
 

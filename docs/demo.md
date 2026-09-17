@@ -32,7 +32,7 @@ Explain that short smoke timing may capture `Healthy`, `Degraded`, `Stale`, or `
 
 ## 3:15–4:15 — recover
 
-The runner removes the toxic, verifies recovery, deletes the k6 Job, restores the NodeQuality baseline and `adaptive` Corefile mode, and waits for both CoreDNS and controller rollouts. Recovery weights use 10%/25%/50%/100% steps in the longer controlled state-machine experiment.
+The runner removes the toxic, verifies recovery, deletes the k6 Job, restores the NodeQuality baseline and `adaptive` Corefile mode, and waits for both CoreDNS and controller rollouts. Recovery uses 10%/25%/50%/100% state factors in the longer controlled state-machine experiment; actual weights also depend on other quality inputs.
 
 ## 4:15–5:00 — recorded result and limits
 
