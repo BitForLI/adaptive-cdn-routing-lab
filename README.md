@@ -1,6 +1,18 @@
 # EdgeRoute
 
-EdgeRoute extends the EdgeCDN-X CoreDNS routing plugin with telemetry-driven node scoring, bounded outlier ejection, weighted rendezvous selection, and gradual cache-node recovery.
+EdgeRoute is an experimental CDN control plane that reduces traffic to unhealthy cache nodes without putting monitoring calls in the DNS request path.
+
+## Product at a glance
+
+| | |
+| --- | --- |
+| **Users** | Platform engineers operating DNS-based edge routing |
+| **Problem** | A node can remain technically reachable while latency, errors, or capacity make it a poor routing choice |
+| **Decision** | Convert Prometheus signals into bounded node weights, ejection, cooldown, and gradual recovery |
+| **Safety model** | Last-known-good state, stale-data limits, per-location ejection limits, and geographic fallback |
+| **Evidence** | A reproducible HLS lab compares three routing policies under four injected faults |
+
+The implementation extends the EdgeCDN-X CoreDNS routing plugin with telemetry-driven node scoring, bounded outlier ejection, weighted rendezvous selection, and gradual cache-node recovery.
 
 The repository is an **extension of [EdgeCDN-X/edgecdnx-plugin](https://github.com/EdgeCDN-X/edgecdnx-plugin)**, not a from-scratch CDN. It composes mature infrastructure—CoreDNS, Kubernetes, Prometheus, NGINX, MediaMTX, Toxiproxy, and k6—and adds the quality-control and routing logic needed to connect them safely.
 
