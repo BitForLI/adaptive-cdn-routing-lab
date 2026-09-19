@@ -1,4 +1,4 @@
-# EdgeRoute
+# Adaptive CDN Routing Lab
 
 EdgeRoute is an experimental CDN control plane that reduces traffic to unhealthy cache nodes without putting monitoring calls in the DNS request path.
 
